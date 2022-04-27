@@ -186,6 +186,51 @@ def fill_contact(first, last, email, phone_number = 999-999-9999):
     ph.send_keys(phone_number)
     next()
 
+def fill_recur():
+    q16 = None
+    q23 = None
+    while True:
+        try:
+            check = driver.find_elements(By.CLASS_NAME, "checkboxBranded")
+        except: Exception
+        try:
+            multi = driver.find_elements(By.CLASS_NAME, "radioBranded")
+        except: Exception
+        try:
+            q16 = driver.find_element(By.ID, "R31000")
+        except: Exception
+        try:
+            text = driver.find_element(By.CLASS_NAME, "textinputwrapper")
+        except: Exception
+        try:
+            q23 = driver.find_element(By.ID, "R32000")
+        except: Exception
+        try:
+            card = driver.find_element(By.CSS_SELECTOR)
+
+
+        if len(check) != 0:
+            for i in range(0, len(check), 2):
+                check[i].click()
+        elif len(multi) != 0:
+            if len(multi) >= 6:
+                try:
+                    for i in range(0,len(multi) + 1, 6):
+                        multi[i].click()
+                except: Exception
+                for i in range(0,len(multi), 2):
+                        multi[i].click()
+            else:
+                multi[1].click()
+        elif q16 != None:
+            q16.send_keys(input("Whole dollar amount? >>\t"))
+            q16 = None
+        elif text != None:
+            print("!")
+        elif q23 != None:
+            q23.send_keys(random.randint(1,6))
+        next()
+
 
 
 
@@ -204,7 +249,7 @@ def fill_contact(first, last, email, phone_number = 999-999-9999):
 
 def main(code, month, day, year, hour, minute, first_name, last_name, email, phone_with_dash = "999-999-9999"):
     inputSurveyCode(code, month, day, year, hour, minute)
-    fill_survey()
+    fill_recur()
     fill_contact(first_name,last_name,email,phone_with_dash)
 
 def test():
