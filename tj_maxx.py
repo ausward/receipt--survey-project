@@ -1,3 +1,6 @@
+# I think I have to can this one. i think they have some anti-bot algo going on that only gives you the choice to enter
+# the sweep if you answer all the questions in a positive way/all of them without hitting next before all the options
+# are picked
 from selenium import webdriver
 import selenium
 from selenium.webdriver.common.keys import Keys
@@ -189,16 +192,20 @@ def fill_contact(first, last, email, phone_number = 999-999-9999):
 
 def fill_recur():
     global card
+
     q16 = None
     q23 = None
     card = None
     iterate = 0
     sweep = None
-    try:
-        fill_contact("a", "w", "a@a.com")
-    except: Exception
+
 
     while iterate != 99:
+        if driver.current_url == "https://www.tjmaxxfeedback.com/Survey.aspx?c=402416":
+            break
+        try:
+            fill_contact("a", "w", "a@a.com")
+        except: Exception
         try:
             check = driver.find_elements(By.CLASS_NAME, "checkboxBranded")
         except: Exception
@@ -222,9 +229,9 @@ def fill_recur():
             sweep = card = driver.find_element(By.ID, "textR67000")
             break
         except: Exception
-
-        print(sweep, card)
-
+        try:
+            print(sweep[:], card[:], q16[:], q23[:], iterate[:])
+        except: TypeError
         if sweep != None:
             sweep.click()
             break
@@ -234,15 +241,17 @@ def fill_recur():
             for i in range(0, len(check), 2):
                 check[i].click()
         elif len(multi) != 0:
-            if len(multi) >= 6:
-                try:
-                    for i in range(0,len(multi) + 1, 6):
-                        multi[i].click()
-                except: Exception
-                for i in range(0,len(multi), 2):
-                        multi[i].click()
-            elif len(multi) == 2:
-                multi[1].click()
+            multi[1].click()
+            # if len(multi) >= 6:
+            #
+            #     for i in range(0,len(multi) + 1, int(len(multi)/2)):
+            #         multi[i].click()
+            #
+            # elif len(multi) == 2:
+            #     multi[1].click()
+            # else:
+            #     for i in range(0,len(multi), 2):
+            #         multi[i].click()
         elif q16 != None:
             q16.send_keys(input("Whole dollar amount? >>\t"))
             q16 = None
@@ -256,20 +265,6 @@ def fill_recur():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def main(code, month, day, year, hour, minute, first_name, last_name, email, phone_with_dash = "999-999-9999"):
     inputSurveyCode(code, month, day, year, hour, minute)
     fill_recur()
@@ -279,3 +274,6 @@ def test():
     main("0855037844", '04',11,22,11,'06', "a","w","a@a.com")
 
 test()
+
+
+
