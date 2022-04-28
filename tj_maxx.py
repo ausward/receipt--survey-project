@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import random
+from selenium.webdriver.support.relative_locator import locate_with
 
 def inputSurveyCode(code, month, day, year, hour, minute):
     global driver
@@ -187,9 +188,17 @@ def fill_contact(first, last, email, phone_number = 999-999-9999):
     next()
 
 def fill_recur():
+    global card
     q16 = None
     q23 = None
-    while True:
+    card = None
+    iterate = 0
+    sweep = None
+    try:
+        fill_contact("a", "w", "a@a.com")
+    except: Exception
+
+    while iterate != 99:
         try:
             check = driver.find_elements(By.CLASS_NAME, "checkboxBranded")
         except: Exception
@@ -206,10 +215,22 @@ def fill_recur():
             q23 = driver.find_element(By.ID, "R32000")
         except: Exception
         try:
-            card = driver.find_element(By.CSS_SELECTOR)
+            card = driver.find_element(locate_with(By.CLASS_NAME,"radioBranded").below(By.LINK_TEXT, "YES"))
+            break
+        except: Exception
+        try:
+            sweep = card = driver.find_element(By.ID, "textR67000")
+            break
+        except: Exception
 
+        print(sweep, card)
 
-        if len(check) != 0:
+        if sweep != None:
+            sweep.click()
+            break
+        elif card != None:
+            card.click()
+        elif len(check) != 0:
             for i in range(0, len(check), 2):
                 check[i].click()
         elif len(multi) != 0:
@@ -220,7 +241,7 @@ def fill_recur():
                 except: Exception
                 for i in range(0,len(multi), 2):
                         multi[i].click()
-            else:
+            elif len(multi) == 2:
                 multi[1].click()
         elif q16 != None:
             q16.send_keys(input("Whole dollar amount? >>\t"))
@@ -228,8 +249,10 @@ def fill_recur():
         elif text != None:
             print("!")
         elif q23 != None:
+            q23.click()
             q23.send_keys(random.randint(1,6))
         next()
+        iterate += 1
 
 
 
@@ -250,7 +273,7 @@ def fill_recur():
 def main(code, month, day, year, hour, minute, first_name, last_name, email, phone_with_dash = "999-999-9999"):
     inputSurveyCode(code, month, day, year, hour, minute)
     fill_recur()
-    fill_contact(first_name,last_name,email,phone_with_dash)
+    # fill_contact(first_name,last_name,email,phone_with_dash)
 
 def test():
     main("0855037844", '04',11,22,11,'06', "a","w","a@a.com")
